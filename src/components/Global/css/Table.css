@@ -1,0 +1,8 @@
+.STable{
+    width: 100%;
+    margin: 0 auto;
+}
+
+.STable thead tr th{
+    text-align: center;
+}

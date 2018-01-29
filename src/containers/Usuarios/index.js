@@ -3,7 +3,11 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Table, Button, Panel } from 'react-bootstrap';
+//import { Table, Button, Panel, Grid, Col, Row } from 'react-bootstrap';
+import  STable  from '../../components/Global/Table';
+
+// Assets
+import '../css/containers.css';
 
 // Actions
 import * as actions from './actions';
@@ -21,48 +25,44 @@ class Usuario extends Component {
     constructor(props) {
         super(props);
 
+
+
         this.state = {
-            usuarios: []
+            usuarios: [],
+            modelo : {
+                headers:[],
+                modelo: []
+            }
         };
 
+      
     }
 
     componentDidMount() {
         this.props.loadUsuarios();
     }
 
-    renderUsuariosList(usuarios) {
-        return (
-            <Table responsive striped bordered condensed hover>
-                <thead>
-                    <tr>
-                        <th>Nombre</th>
-                        <th>Edad</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        usuarios.map((usuario, key) => {
-                            return (
-                                <tr key={key}>
-                                    <td>{usuario.nombre}</td>
-                                    <td>{usuario.edad}</td>
-                                </tr>
-                            )
-                        })
-                    }
-                </tbody>
-            </Table>
-        );
-    }
-
     render() {
         const { usuarios } = this.props;
+        this.state.modelo.modelo = usuarios;
+
         return (
             <div className="usuario">
-                    <h3>Usuarios</h3>               
-                    {usuarios && this.renderUsuariosList(usuarios)}
-            </div>
+                <div className="mdl-grid">
+                    <div className="mdl-cell mdl-cell--6-col">
+                        <h3>Usuarios</h3>
+                    </div>
+                    <div className="mdl-cell mdl-cell--6-col">
+
+                    </div>
+                </div>
+
+                <STable modelo={this.state.modelo} />
+
+                <button className="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab button_create" title="Crear usuario">
+                    <i className="material-icons">add</i>
+                </button>
+            </div >
         );
     }
 }

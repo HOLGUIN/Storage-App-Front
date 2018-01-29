@@ -11,7 +11,7 @@ class Footer extends Component {
   };
 
   render() {
-  	const { copyright = '&copy; React 2017' } = this.props;
+  	const { copyright = '&copy; Inventario App 2017' } = this.props;
 
     return (
       <div className="Footer">

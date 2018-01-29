@@ -2,7 +2,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Grid, Row, Col } from 'react-bootstrap';
 
 // Assets
 import logo from './images/logo.svg';
@@ -40,7 +39,8 @@ class Header extends Component {
           <nav className="mdl-navigation">
             {
               items && items.map(
-                (item, key) =><div key={key}><Link to={item.url} key={key} className="mdl-navigation__link">{item.title}</Link></div>               )
+                (item, key) =><div key={key}><Link to={item.url} key={key} className="mdl-navigation__link">{item.title}</Link></div>
+              )
             }
           </nav>
         </div>
