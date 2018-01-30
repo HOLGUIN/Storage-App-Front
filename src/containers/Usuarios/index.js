@@ -32,20 +32,21 @@ class Usuario extends Component {
             modelo : {
                 headers:[],
                 modelo: []
-            }
-        };
-
-      
+            },
+            tags: []
+        }; 
     }
 
     componentDidMount() {
         this.props.loadUsuarios();
     }
 
+
+
     render() {
         const { usuarios } = this.props;
         this.state.modelo.modelo = usuarios;
-
+        this.state.tags = ["Nombre", "Edad"];
         return (
             <div className="usuario">
                 <div className="mdl-grid">
@@ -57,7 +58,7 @@ class Usuario extends Component {
                     </div>
                 </div>
 
-                <STable modelo={this.state.modelo} />
+                <STable modelo={this.state.modelo} tags={this.state.tags} />
 
                 <button className="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab button_create" title="Crear usuario">
                     <i className="material-icons">add</i>
