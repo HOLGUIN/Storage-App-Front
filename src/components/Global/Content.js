@@ -14,8 +14,10 @@ class Content extends Component {
     const { body } = this.props;
 
     return (
-      <div className="Content">
-        {body}
+      <div className="Content mdl-layout__content">
+        <div className="Cbody">
+          {body}
+        </div>
       </div>
     );
   }

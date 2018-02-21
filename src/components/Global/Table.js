@@ -2,103 +2,85 @@
 import React, { Component } from 'react';
 import PropTypes, { element } from 'prop-types';
 import { Link } from 'react-router-dom';
-import { Table, Button, Panel, Grid, Col, Row } from 'react-bootstrap';
+import matchSorter from 'match-sorter'
+//import { Table, Button, Panel, Grid, Col, Row } from 'react-bootstrap';
 
-import './css/Table.css';
+//import './css/Table.css';
+
+// Import React Table
+import ReactTable from "react-table";
+import "react-table/react-table.css";
 
 class STable extends Component {
 
     static propTypes = {
         modelo: PropTypes.object.isRequired,
-        tags: PropTypes.array.isRequired
+        methods: PropTypes.object
     };
 
-
-    json2array(item, getKeys, tags) {
-
-        var array = [];
-        var filter = false
-        if (tags == "all" || tags == "ALL") {
-            filter = false;
-        }
-        else {
-            filter = true;
-        }
-
-        if( item !== undefined)
-        {
-            Object.keys(item).forEach(function (key) {
-                if (getKeys) {
-    
-                    if (filter) {
-                        tags.forEach(function (tag) {
-                            if (key.toLowerCase() == tag.toLowerCase()) { array.push(key); }
-    
-                        })
-                    }
-                    else {
-                        array.push(key);
-                    }
-    
-                }
-                else {
-                    if (filter) {
-                        tags.forEach(function (tag) {
-                            if (key.toLowerCase() == tag.toLowerCase()) { array.push(item[key]); }
-    
-                        })
-                    }
-                    else {
-                        array.push(item[key]);
-                    }
-                }
-            });
-    
-            return array;
-        }else{
-            return [];
-        }
-
-    }
-
-    generateTableRowsFromJSON(item, tags) {
-
-        var array = this.json2array(item, false, tags);
-        return array.map((element, key) => {
-            return <td key={key}>{element}</td>
-        });
-    }
-
-    generateTableColumnsFromJSON(item, tags) {
-        var array = this.json2array(item, true, tags);
-        return array.map((element, key) => {
-            return <th key={key}>{element}</th>
-        });
+    constructor(props) {
+        super(props);
+        this.state = {
+            tags: []
+        };
     }
 
 
+    componentDidMount() {
+
+        if (this.props.modelo.modelo.length > 0) {
+            var lt = [];
+            if (this.props.modelo.tags.length > 0) {
+                var aux = this.props.modelo.tags;
+                var count = 0;
+                Object.keys(this.props.modelo.modelo[0]).forEach(function (key) {
+                    if (aux[count] && aux[count].show != false) {
+
+                        if (aux[count].filter && aux[count].filter == true) {
+                            var tag = {
+                                Header: aux[count].tag ? aux[count].tag : key,
+                                accessor: key,
+                                filterMethod: (filter, rows) =>
+                                    matchSorter(rows, filter.value, { keys: [key] }),
+                                filterAll: true
+                            }
+                        } else {
+                            var tag = {
+                                Header: aux[count].tag ? aux[count].tag : key,
+                                accessor: key,
+                                sortable: false,
+                                filterable: false,
+                            }
+                        }
+                        lt.push(tag);
+                    }
+                    count = count + 1;
+                });
+            } else {
+                Object.keys(this.props.modelo.modelo[0]).forEach(function (key) {
+                    var tag = { Header: key, accessor: key }
+                    lt.push(tag);
+                });
+            }
+            this.setState({ tags: lt });
+        }
+    }
 
     render() {
-        const { modelo, tags } = this.props;
+        const { modelo } = this.props;
         return (
-
-            <Table striped bordered condensed hover responsive className="STable">
-                <thead>
-                    <tr>
-                        {this.generateTableColumnsFromJSON(modelo.modelo[0], tags)}
-                    </tr>
-                </thead>
-                <tbody>
-                    {
-                        modelo.modelo && modelo.modelo.map(
-                            (item, key) =>
-                                <tr key={key}>
-                                    {this.generateTableRowsFromJSON(item, tags)}
-                                </tr>
-                        )
-                    }
-                </tbody>
-            </Table>
+            <div>
+                <ReactTable
+                    data={modelo.modelo}
+                    noDataText="No Data"
+                    filterable
+                    columns={this.state.tags}
+                    defaultPageSize={this.props.modelo.defaultPageSize == 0 ||
+                        this.props.modelo.defaultPageSize == null ? 10 :
+                        this.props.modelo.defaultPageSize}
+                    className="-striped -highlight"
+                />
+            </div>
         );
     }
 }

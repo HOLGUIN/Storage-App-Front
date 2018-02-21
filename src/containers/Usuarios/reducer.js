@@ -14,6 +14,9 @@ export default function usuarioReducer(state = initialState, action) {
         usuarios: response
       });
     }
+    case 'POST_USUARIO_SUCCESS': {
+      const { payload: { response = [] }} = action;
+    }
     default:
       return state;
   }
